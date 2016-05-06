@@ -114,6 +114,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     OneplusDoze
 
+# Doze
+PRODUCT_PACKAGES += \
+    OnyxDoze
+
 # Graphics
 PRODUCT_PACKAGES += \
     copybit.msm8974 \
