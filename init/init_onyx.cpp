@@ -26,13 +26,14 @@
  */
 
 #include <stdlib.h>
-
+#include <iostream>
 #include "vendor_init.h"
 #include "property_service.h"
 #include "log.h"
 #include "util.h"
 
 #define ISMATCH(a,b)    (!strncmp(a,b,PROP_VALUE_MAX))
+int old_property_get(const char * name, char *value);
 
 void vendor_load_properties()
 {
@@ -41,11 +42,11 @@ void vendor_load_properties()
     char rf_version[PROP_VALUE_MAX];
     int rc;
 
-    rc = property_get("ro.board.platform", platform);
+    rc = old_property_get("ro.board.platform", platform);
     if (!rc || !ISMATCH(platform, ANDROID_TARGET))
         return;
 
-    property_get("ro.boot.rf_version", rf_version);
+    old_property_get("ro.boot.rf_version", rf_version);
 
     if (strstr(rf_version, "101")) {
         /* China */
@@ -64,6 +65,18 @@ void vendor_load_properties()
         property_set("ro.product.model", "ONE E1000");
         property_set("ro.rf_version", "TDD_FDD_ALL_OPTR");
     }
-    property_get("ro.product.device", device);
+    old_property_get("ro.product.device", device);
     INFO("Found rf_version : %s setting build properties for %s device\n", rf_version, device);
 }
+
+int old_property_get(const char * name, char *value) {
+	size_t value_len = __builtin_object_size(value, 0);
+	if (value_len != PROP_VALUE_MAX) {
+		std::cerr << "error: property_get called with too small buffer\n";
+	}
+
+	return __system_property_get(name,value);
+
+}
+
+
