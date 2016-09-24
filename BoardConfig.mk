@@ -19,6 +19,10 @@
 
 PLATFORM_PATH := device/oneplus/onyx
 
+BOARD_GLOBAL_CFLAGS+= -DUSE_RIL_VERSION_11
+
+TARGET_NEEDS_TEXT_RELOCATIONS := true
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8974
 TARGET_NO_BOOTLOADER := true
@@ -39,7 +43,7 @@ TARGET_CPU_VARIANT := krait
 
 # Kernel
 BOARD_KERNEL_BASE := 0x00000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=23 msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom user_debug=23 msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
@@ -95,7 +99,7 @@ BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_CACHEIMAGE_PARTITION_SIZE    := 536870912
 BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_PERSISTIMAGE_PARTITION_SIZE  := 33554432
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
+# BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
 BOARD_SYSTEMIMAGE_PARTITION_SIZE   := 2147483648
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 12611894272
@@ -112,6 +116,7 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 EXTENDED_FONT_FOOTPRINT := true
 
 # GPS
+BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
 USE_DEVICE_SPECIFIC_GPS := true
 USE_DEVICE_SPECIFIC_LOC_API := true
 
@@ -158,10 +163,10 @@ TARGET_RIL_VARIANT := caf
 TARGET_NO_RPC := true
 
 # SELinux
-include device/qcom/sepolicy/sepolicy.mk
+#include device/qcom/sepolicy/sepolicy.mk
 
-BOARD_SEPOLICY_DIRS += \
-    $(PLATFORM_PATH)/sepolicy
+#BOARD_SEPOLICY_DIRS += \
+#    $(PLATFORM_PATH)/sepolicy
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
@@ -177,12 +182,5 @@ TARGET_USES_WCNSS_MAC_ADDR_REV := true
 WIFI_DRIVER_FW_PATH_STA := "sta"
 WIFI_DRIVER_FW_PATH_AP := "ap"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
-
-# QCNE
-BOARD_USES_QCNE := true
-
-ifeq ($(BOARD_USES_QCNE),true)
-TARGET_LDPRELOAD := libNimsWrap.so
-endif
 
 -include vendor/oneplus/onyx/BoardConfigVendor.mk
